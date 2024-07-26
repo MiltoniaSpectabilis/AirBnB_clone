@@ -1,31 +1,23 @@
 #!/usr/bin/python3
-"""
-HBNB command interpreter
-"""
 import cmd
 import sys
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
-from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
+from models.place import Place
 from models.review import Review
 
-
 class HBNBCommand(cmd.Cmd):
-    """
-    HBNB command interpreter class
-    """
+    prompt = '(hbnb) '
 
-    prompt = "(hbnb) "
-
-    def postcmd(self, stop, line):
-        """Add a newline after the prompt if not in interactive mode."""
+    def precmd(self, line):
+        """Print a new line before the prompt in non-interactive mode"""
         if not sys.stdin.isatty():
-            print(end='\n')
-        return stop
+            print()
+        return line
 
     def do_quit(self, arg):
         """Quit command to exit the program"""
@@ -40,137 +32,129 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Creates a new instance of a class"""
-        args = arg.split()
-        if not args:
+        """Create a new instance of a class, save it, and print the id"""
+        if not arg:
             print("** class name missing **")
             return
         try:
-            new_instance = eval(args[0])()
-        except NameError:
+            cls = globals()[arg]
+            new_instance = cls()
+            new_instance.save()
+            print(new_instance.id)
+        except KeyError:
             print("** class doesn't exist **")
-            return
-        storage.new(new_instance)
-        storage.save()
-        print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance"""
+        """Prints the string representation of an instance based on the class name and id"""
         args = arg.split()
         if not args:
             print("** class name missing **")
             return
-        if len(args) == 1:
-            print("** instance id missing **")
-            return
         try:
-            instance = storage.all()[f"{args[0]}.{args[1]}"]
+            cls = globals()[args[0]]
+            if len(args) < 2:
+                print("** instance id missing **")
+                return
+            key = "{}.{}".format(args[0], args[1])
+            if key in storage.all():
+                print(storage.all()[key])
+            else:
+                print("** no instance found **")
         except KeyError:
-            print("** no instance found **")
-            return
-        print(instance)
+            print("** class doesn't exist **")
 
     def do_destroy(self, arg):
-        """Deletes an instance"""
+        """Deletes an instance based on the class name and id"""
         args = arg.split()
         if not args:
             print("** class name missing **")
             return
-        if len(args) == 1:
-            print("** instance id missing **")
-            return
         try:
-            instance = storage.all()[f"{args[0]}.{args[1]}"]
-            del storage.all()[f"{args[0]}.{args[1]}"]
-            storage.save()
+            cls = globals()[args[0]]
+            if len(args) < 2:
+                print("** instance id missing **")
+                return
+            key = "{}.{}".format(args[0], args[1])
+            if key in storage.all():
+                del storage.all()[key]
+                storage.save()
+            else:
+                print("** no instance found **")
         except KeyError:
-            print("** no instance found **")
-            return
+            print("** class doesn't exist **")
 
     def do_all(self, arg):
-        """Prints all string representations of all instances"""
-        args = arg.split()
-        objects = storage.all()
-        if args:
+        """Prints all string representation of all instances based or not on the class name"""
+        if arg:
             try:
-                objects = [
-                    str(obj)
-                    for obj in objects.values()
-                    if obj.__class__.__name__ == args[0]
-                ]
-            except NameError:
+                cls = globals()[arg]
+                instances = [str(obj) for key, obj in storage.all().items() if arg in key]
+                print(instances)
+            except KeyError:
                 print("** class doesn't exist **")
-                return
         else:
-            objects = [str(obj) for obj in objects.values()]
-        print(objects)
+            instances = [str(obj) for key, obj in storage.all().items()]
+            print(instances)
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id"""
+        """Updates an instance based on the class name and id by adding or updating attribute"""
         args = arg.split()
         if not args:
             print("** class name missing **")
             return
-        if len(args) == 1:
-            print("** instance id missing **")
-            return
-        if len(args) == 2:
-            print("** attribute name missing **")
-            return
-        if len(args) == 3:
-            print("** value missing **")
-            return
         try:
-            instance = storage.all()[f"{args[0]}.{args[1]}"]
-            attr_name = args[2]
-            attr_value = args[3]
-            if attr_value.startswith('"') and attr_value.endswith('"'):
-                attr_value = attr_value[1:-1]
-            if '.' in attr_value:
-                try:
-                    attr_value = float(attr_value)
-                except ValueError:
-                    pass
-            setattr(instance, attr_name, attr_value)
-            storage.save()
+            cls = globals()[args[0]]
+            if len(args) < 2:
+                print("** instance id missing **")
+                return
+            key = "{}.{}".format(args[0], args[1])
+            if key not in storage.all():
+                print("** no instance found **")
+                return
+            if len(args) < 3:
+                print("** attribute name missing **")
+                return
+            if len(args) < 4:
+                print("** value missing **")
+                return
+            obj = storage.all()[key]
+            setattr(obj, args[2], args[3].strip('"'))
+            obj.save()
         except KeyError:
-            print("** no instance found **")
-            return
+            print("** class doesn't exist **")
 
-    def help_quit(self):
-        """Help for quit command"""
-        print("Quit command to exit the program")
-
-    def help_EOF(self):
-        """Help for EOF command"""
-        print("EOF command to exit the program")
-
-    def help_create(self):
-        """Help for create command"""
-        print("Creates a new instance of a class.")
-        print("Usage: create <class name>")
-
-    def help_show(self):
-        """Help for show command"""
-        print("Prints the string representation of an instance.")
-        print("Usage: show <class name> <id>")
-
-    def help_destroy(self):
-        """Help for destroy command"""
-        print("Deletes an instance.")
-        print("Usage: destroy <class name> <id>")
-
-    def help_all(self):
-        """Help for all command"""
-        print("Prints all string representations of all instances.")
-        print("Usage: all <class name> (optional)")
-
-    def help_update(self):
-        """Help for update command"""
-        print("Updates an instance based on the class name and id.")
-        print("Usage: update <class name> <id> <attribute name> "
-              "\"<attribute value>\"")
-
+    def do_help(self, arg):
+        """List available commands with 'help' or detailed help with 'help cmd'."""
+        if arg:
+            # Try to execute parent class do_help() method
+            try:
+                func = getattr(self, 'help_' + arg)
+            except AttributeError:
+                try:
+                    doc = getattr(self, 'do_' + arg).__doc__
+                    if doc:
+                        self.stdout.write("%s\n" % str(doc))
+                        return
+                except AttributeError:
+                    pass
+                self.stdout.write("%s\n" % str(self.nohelp % (arg,)))
+                return
+            func()
+        else:
+            if not sys.stdin.isatty():
+                print()
+                print("Documented commands (type help <topic>):")
+                print("========================================")
+                commands = [name[3:] for name in dir(self) if name.startswith('do_')]
+                print(" ".join(commands))
+            else:
+                print()
+                print("Documented commands (type help <topic>):")
+                print("========================================")
+                commands = [name[3:] for name in dir(self) if name.startswith('do_')]
+                print(" ".join(commands))
+                print()
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
+
