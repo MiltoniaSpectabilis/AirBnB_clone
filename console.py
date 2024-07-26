@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+HBNB command interpreter
+"""
 import cmd
 import sys
 from models import storage
@@ -11,6 +14,10 @@ from models.place import Place
 from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
+    """
+    HBNB command interpreter class
+    """
+
     prompt = '(hbnb) '
 
     def precmd(self, line):
