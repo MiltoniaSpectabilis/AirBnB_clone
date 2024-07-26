@@ -1,9 +1,15 @@
 #!/usr/bin/python3
+"""
+BaseModel module
+"""
 import uuid
 from datetime import datetime
 from models import storage
 
 class BaseModel:
+    """
+    Base class for all models
+    """
     def __init__(self, *args, **kwargs):
         if kwargs:
             for key, value in kwargs.items():
