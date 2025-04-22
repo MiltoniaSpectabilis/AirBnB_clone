@@ -14,13 +14,26 @@ class BaseModel:
     for persistence
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Initializes a new BaseModel instance
         """
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        if kwargs:
+            for k, v in kwargs.items():
+                if k == '__class__':
+                    continue
+                elif k == 'created_at':
+                    setattr(self, k, datetime.strptime(
+                        v, "%Y-%m-%dT%H:%M:%S.%f"))
+                elif k == 'updated_at':
+                    setattr(self, k, datetime.strptime(
+                        v, "%Y-%m-%dT%H:%M:%S.%f"))
+                else:
+                    setattr(self, k, v)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def save(self):
         """
