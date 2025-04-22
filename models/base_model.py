@@ -17,11 +17,7 @@ class BaseModel:
     representation for serialization.
     """
 
-    def __init__(self,
-                 id=uuid4(),
-                 created_at=datetime.now(),
-                 updated_at=datetime.now()
-                 ):
+    def __init__(self, id=None, created_at=None, updated_at=None):
         """
         Initializes a new BaseModel instance.
 
@@ -33,9 +29,9 @@ class BaseModel:
             updated_at (datetime, optional): Datetime of last update.
                                             Defaults to the current datetime.
         """
-        self.id = str(id)
-        self.created_at = created_at
-        self.updated_at = updated_at
+        self.id = str(uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
 
     def save(self):
         """
