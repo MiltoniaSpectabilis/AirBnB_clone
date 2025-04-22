@@ -14,7 +14,7 @@ class BaseModel:
     for persistence
     """
 
-    def __init__(self, id=None, created_at=None, updated_at=None):
+    def __init__(self):
         """
         Initializes a new BaseModel instance
         """
