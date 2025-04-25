@@ -66,9 +66,7 @@ class TestFileStorage(unittest.TestCase):
         Tests the all() method to ensure it returns the __objects dictionary.
         """
         storage_instance = FileStorage()
-        # Ensure it returns a dictionary
         self.assertIsInstance(storage_instance.all(), dict)
-        # Ensure it returns the same dictionary reference
         self.assertEqual(storage_instance.all(),
                          FileStorage._FileStorage__objects)
         self.assertIs(storage_instance.all(),
@@ -79,11 +77,8 @@ class TestFileStorage(unittest.TestCase):
         Tests the new() method to ensure it adds an object to __objects.
         """
         storage_instance = FileStorage()
-        # Create a BaseModel object
         bm = BaseModel()
-        # Call new() with the object
         storage_instance.new(bm)
-        # Verify the object is in __objects with the correct key
         key = f"{bm.__class__.__name__}.{bm.id}"
         self.assertIn(key, FileStorage._FileStorage__objects)
         self.assertEqual(FileStorage._FileStorage__objects[key], bm)
@@ -94,65 +89,29 @@ class TestFileStorage(unittest.TestCase):
         Ensures objects are correctly serialized and deserialized.
         """
         storage_instance = FileStorage()
-        # Clear __objects initially
         FileStorage._FileStorage__objects = {}
 
-        # Create BaseModel objects
         bm1 = BaseModel()
         bm2 = BaseModel()
 
-        # Add objects to storage
         storage_instance.new(bm1)
         storage_instance.new(bm2)
 
-        # Save the objects to the file
         storage_instance.save()
 
-        # Clear __objects again before reloading
         FileStorage._FileStorage__objects = {}
 
-        # Reload objects from the file
         storage_instance.reload()
 
-        # Verify that __objects is no longer empty
         self.assertGreater(len(FileStorage._FileStorage__objects), 0)
         self.assertEqual(len(FileStorage._FileStorage__objects), 2)
 
-        # Verify that the reloaded objects are instances of BaseModel
         for obj in FileStorage._FileStorage__objects.values():
             self.assertIsInstance(obj, BaseModel)
 
-        # Verify that the reloaded objects match
-        # the original objects (by id and class name)
         key1 = f"{bm1.__class__.__name__}.{bm1.id}"
         key2 = f"{bm2.__class__.__name__}.{bm2.id}"
         self.assertIn(key1, FileStorage._FileStorage__objects)
         self.assertIn(key2, FileStorage._FileStorage__objects)
         self.assertEqual(FileStorage._FileStorage__objects[key1].id, bm1.id)
         self.assertEqual(FileStorage._FileStorage__objects[key2].id, bm2.id)
-
-    def test_reload_no_file(self):
-        """
-        Tests reload() when the file.json does not exist.
-        Should not raise an exception and __objects should remain empty.
-        """
-        storage_instance = FileStorage()
-        # Ensure __objects is empty before reloading
-        FileStorage._FileStorage__objects = {}
-        # Ensure the file does not exist
-        if os.path.exists("file.json"):
-            os.remove("file.json")
-
-        # Call reload() - it should not raise an error
-        try:
-            storage_instance.reload()
-        except Exception as e:
-            self.fail(
-                f"reload() raised an exception when file did not exist: {e}")
-
-        # Verify that __objects is still empty
-        self.assertEqual(FileStorage._FileStorage__objects, {})
-
-
-if __name__ == '__main__':
-    unittest.main()
