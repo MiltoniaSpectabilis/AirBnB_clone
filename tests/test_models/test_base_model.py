@@ -63,3 +63,36 @@ class TestBaseModel(unittest.TestCase):
 
         # Assert that updated_updated_at is a datetime object
         self.assertIsInstance(updated_updated_at, datetime)
+
+
+def test_to_dict_method(self):
+    """
+    Tests the to_dict() method to ensure it returns a dictionary
+    with correct content and format.
+    """
+    bm = BaseModel()
+    # Add a couple of custom attributes to the instance
+    bm.name = "My First Model"
+    bm.my_number = 89
+
+    # Get the dictionary representation
+    bm_dict = bm.to_dict()
+
+    # 1. Test that the return type is a dictionary
+    self.assertIsInstance(bm_dict, dict)
+
+    instance_dict = bm.__dict__.copy()
+
+    expected_keys = ['id', 'created_at', 'updated_at',
+                     'name', 'my_number', '__class__']
+    self.assertEqual(set(bm_dict.keys()), set(expected_keys))
+
+    self.assertIsInstance(bm_dict['created_at'], str)
+    self.assertIsInstance(bm_dict['updated_at'], str)
+
+    self.assertIn('__class__', bm_dict)
+    self.assertEqual(bm_dict['__class__'], 'BaseModel')
+
+    self.assertIsInstance(bm.created_at, datetime)
+    self.assertIsInstance(bm.updated_at, datetime)
+    self.assertFalse(hasattr(bm, '__class__'))
