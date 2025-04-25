@@ -18,3 +18,11 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(hasattr(storage_instance, '_FileStorage__file_path'))
         self.assertTrue(storage_instance._FileStorage__file_path, "file.json")
         self.assertIsInstance(storage_instance._FileStorage__file_path, str)
+
+    def test_all_returns_dict(self):
+        """
+        Tests if the all() method returns a dictionary.
+        """
+        storage_instance = FileStorage()
+        all_objects = storage_instance.all()
+        self.assertIsInstance(all_objects, dict)
