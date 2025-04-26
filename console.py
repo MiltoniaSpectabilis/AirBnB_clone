@@ -21,6 +21,10 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def emptyline(self):
+        """Do nothing on empty input line."""
+        pass
+
     def do_help(self, arg):
         """List available commands with "help" or detailed help with "help cmd"."""  # noqa
         super().do_help(arg)
