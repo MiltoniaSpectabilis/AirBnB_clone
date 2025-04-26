@@ -1,4 +1,4 @@
-#!/usr/bin/python5
+#!/usr/bin/python3
 """Defines the HBNBCommand class."""
 
 import cmd
