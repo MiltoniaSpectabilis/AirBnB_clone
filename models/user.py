@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""User class representing a user of the application."""
+"""User class representing a user."""
 
 from models.base_model import BaseModel
 
