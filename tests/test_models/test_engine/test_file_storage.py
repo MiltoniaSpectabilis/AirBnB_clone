@@ -3,13 +3,13 @@
 Unit tests for the FileStorage class.
 """
 
-import unittest
+from unittest import TestCase
 import os
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
 
-class TestFileStorage(unittest.TestCase):
+class TestFileStorage(TestCase):
     """
     Test cases for the FileStorage class methods and attributes.
     """

@@ -2,13 +2,13 @@
 """
 
 """
-import unittest
+from unittest import TestCase
 from models.base_model import BaseModel
 from datetime import datetime
 import time
 
 
-class TestBaseModel(unittest.TestCase):
+class TestBaseModel(TestCase):
     """
 
     """
