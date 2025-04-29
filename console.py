@@ -35,7 +35,7 @@ class HBNBCommand(cmd.Cmd):
         """Shows an instance."""
         args = arg.split()
         if not args:
-            print("** class name is missing **")
+            print("** class name missing **")
             return
         cls_name = args[0]
         if cls_name not in HBNBCommand.cls_names:
@@ -56,7 +56,7 @@ class HBNBCommand(cmd.Cmd):
         """Destroys an instance."""
         args = arg.split()
         if not args:
-            print("** class name is missing **")
+            print("** class name missing **")
             return
         cls_name = args[0]
         if cls_name not in HBNBCommand.cls_names:
