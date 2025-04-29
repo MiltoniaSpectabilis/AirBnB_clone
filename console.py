@@ -3,6 +3,7 @@
 
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -11,7 +12,8 @@ class HBNBCommand(cmd.Cmd):
 
     # i'll be adding more names later
     cls_names = {
-        'BaseModel': BaseModel
+        'BaseModel': BaseModel,
+        'User': User,
     }
 
     def __init__(self, stdin=None, stdout=None):

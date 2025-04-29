@@ -40,9 +40,11 @@ class FileStorage:
 
             # Move import here to break circularity
             from models.base_model import BaseModel
+            from models.user import User
             # Define the mapping of class names to class objects here
             classes = {
                 "BaseModel": BaseModel,
+                "User": User,
             }
 
             for k, v in dic.items():
