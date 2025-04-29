@@ -14,10 +14,10 @@ class HBNBCommand(cmd.Cmd):
         'BaseModel': BaseModel
     }
 
-    # def __init__(self):
-    #     """Initializes the interpreter."""
-    #     super().__init__()
-    prompt = '(hbnb) '
+    def __init__(self, stdin=None, stdout=None):
+        """Initializes the interpreter."""
+        super().__init__(stdin=stdin, stdout=stdout)
+        self.prompt = '(hbnb) '
 
     def do_create(self, arg):
         """Creates a new instance."""
