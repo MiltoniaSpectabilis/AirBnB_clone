@@ -29,7 +29,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             new_instance = HBNBCommand.cls_names[args[0]]()
             new_instance.save()
-            print(f"{new_instance.id}")
+            print(new_instance.id)
 
     def do_show(self, arg):
         """Shows an instance."""
