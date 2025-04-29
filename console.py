@@ -4,6 +4,11 @@
 import cmd
 from models.base_model import BaseModel
 from models.user import User
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
+from models.state import State
 from models import storage
 
 
@@ -14,6 +19,11 @@ class HBNBCommand(cmd.Cmd):
     cls_names = {
         'BaseModel': BaseModel,
         'User': User,
+        'City': City,
+        'Place': Place,
+        'Amenity': Amenity,
+        'Review': Review,
+        'State': State
     }
 
     def __init__(self, stdin=None, stdout=None):
