@@ -133,6 +133,25 @@ class HBNBCommand(cmd.Cmd):
         setattr(objects[key], attr_name, attr_value[1:-1])
         storage.save()
 
+    def default(self, line):
+        """Shows all instances of a class using ".all()"."""
+        split_line = line.split()
+        cmd = split_line[0].split(".")
+        if len(cmd) < 2:
+            return
+        cls_name = cmd[0]
+        cls_method = cmd[1]
+        if cls_name not in HBNBCommand.cls_names:
+            return
+        if cls_method != "all()":
+            return
+        objects = storage.all()
+        instances = ""
+        for k, v in objects.items():
+            if cls_name in k:
+                instances += str(v)
+        print(f"[{instances}]")
+
     def do_quit(self, arg):
         """Quits the interpreter."""
         return True
@@ -145,10 +164,6 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing on empty input line."""
         pass
-
-    def do_help(self, arg):
-        """List available commands with "help" or detailed help with "help cmd"."""  # noqa
-        super().do_help(arg)
 
 
 if __name__ == '__main__':
