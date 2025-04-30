@@ -143,14 +143,21 @@ class HBNBCommand(cmd.Cmd):
         cls_method = cmd[1]
         if cls_name not in HBNBCommand.cls_names:
             return
-        if cls_method != "all()":
+        if cls_method not in ["all()", "count()"]:
             return
         objects = storage.all()
         instances = ""
+        counter = 0
         for k, v in objects.items():
             if cls_name in k:
-                instances += str(v)
-        print(f"[{instances}]")
+                if cls_method == "all()":
+                    instances += str(v)
+                elif cls_method == "count()":
+                    counter += 1
+        if cls_method == "all()":
+            print(f"[{instances}]")
+        elif cls_method == "count()":
+            print(counter)
 
     def do_quit(self, arg):
         """Quits the interpreter."""
