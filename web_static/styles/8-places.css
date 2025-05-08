@@ -28,11 +28,11 @@
 
 .price_by_night {
   color: #ff5a5f;
-  font-size: 30px;
+  font-size: 20px;
   border: 4px solid #ff5a5f;
   border-radius: 50%;
-  min-width: 60px;
-  height: 60px;
+  min-width: 70px;
+  height: 70px;
   position: absolute;
   top: 20px;
   right: 20px;
