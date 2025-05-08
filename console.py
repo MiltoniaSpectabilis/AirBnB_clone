@@ -134,7 +134,9 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def default(self, line):
-        """Shows all instances of a class using ".all()"."""
+        """Shows all instances of a class using ".all()".
+           Show the number of instances of class using ".count()"
+        """
         split_line = line.split()
         cmd = split_line[0].split(".")
         if len(cmd) < 2:
